@@ -65,6 +65,7 @@ let node3 = {
     // 输入
     input: [
         {
+        }, {
         }
     ],
     // 输出
@@ -126,7 +127,7 @@ workflow.on('click', function (name, data, eInfo) {
         }
     }
     // 取消点击监听
-    workflow.off('click');
+    // workflow.off('click');
 });
 workflow.on('addNode', function (node) {
     console.log('custom addNode triggered!');

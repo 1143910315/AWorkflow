@@ -479,13 +479,13 @@ export default class AWorkflow {
                 eventPack.push({ "type": "node", id })
                 times++;
             }
-            item.children.inputCircles.forEach(function (inputCirclesItem, inputCirclesIndex) {
+            item.children.inputCircles && item.children.inputCircles.forEach(function (inputCirclesItem, inputCirclesIndex) {
                 if (inputCirclesItem.dom.id === e.target.id) {
                     eventPack.push({ "type": "node", id })
                     times++;
                 }
             })
-            item.children.outputCircles.forEach(function (outputCirclesItem, outputCirclesIndex) {
+            item.children.outputCircles && item.children.outputCircles.forEach(function (outputCirclesItem, outputCirclesIndex) {
                 if (outputCirclesItem.dom.id === e.target.id) {
                     eventPack.push({ "type": "node", id })
                     times++;
