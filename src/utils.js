@@ -4,7 +4,7 @@
  */
 import zrender from 'zrender';
 
-export function mergeArrays(...arr) {
+export function mergeArrays (...arr) {
     if (arr.length === 0) {
         throw new Error('数组为空');
     }
@@ -44,7 +44,7 @@ export function mergeArrays(...arr) {
  * @param {string=} direction 指向方向
  * @return {Array} 控制点数组，[[x1, y1], [x2, y2]]
  */
-export function calcuBezizerControlPoints(start, end, direction) {
+export function calcuBezizerControlPoints (start, end, direction) {
     let cp1 = start;
     let cp2 = end;
     switch (direction) {
@@ -82,7 +82,7 @@ export function calcuBezizerControlPoints(start, end, direction) {
  * @param {Array<number>} end 终点坐标
  * @param {Array<string>} pointTo 箭头方向
  */
-export function calcuLinePoints(edge, nodes) {
+export function calcuLinePoints (edge, nodes) {
     const srcInArray = edge.src.split(':');
     const distInArray = edge.to.split(':');
     const startNode = nodes.find(n => n.props.id === srcInArray[0]);
@@ -160,7 +160,7 @@ export function calcuLinePoints(edge, nodes) {
  * @param {string} direction 顶点方向
  * @return {Array<Array<number>>} 三角形每个点的坐标
  */
-export function cacluTrianglePoints(width, height, apex, direction) {
+export function cacluTrianglePoints (width, height, apex, direction) {
     const points = [];
     points.push(apex);
     switch (direction) {
@@ -196,11 +196,12 @@ export function cacluTrianglePoints(width, height, apex, direction) {
  * @param {Object} mousedownEvent {e.zrX, e.zrY}
  * @return {Function} 计算mousemove时的位置函数
  */
-export function prepareMoveNode(zrNode, mousedownEvent) {
+export function prepareMoveNode (zrNode, mousedownEvent) {
     let deltPostion = [mousedownEvent.event.zrX - zrNode.position[0], mousedownEvent.event.zrY - zrNode.position[1]];
 
-    return function moveNode(canvas, workflowInstance, mousemoveEvent) {
-        let {canvasWidth, canvasHeight} = canvas.style;
+    return function moveNode (canvas, workflowInstance, mousemoveEvent) {
+        let canvasWidth = canvas.offsetWidth;
+        let canvasHeight = canvas.offsetHeight;
         let workflowObj = workflowInstance.workflowObj;
         let node = workflowObj.nodes.find(n => {
             return n.dom.group.id === zrNode.id;
@@ -231,7 +232,7 @@ export function prepareMoveNode(zrNode, mousedownEvent) {
         let n = workflowObj.nodes.find(n => {
             return n.dom.group.id === zrNode.id;
         });
-        workflowInstance.triggerCustomEvent('dragNode', {target: n});
+        workflowInstance.triggerCustomEvent('dragNode', { target: n });
     };
 }
 
@@ -242,13 +243,13 @@ export function prepareMoveNode(zrNode, mousedownEvent) {
  * @param {Object} workflowObj workflowObj对象
  * @return {Function} mousemove时画线
  */
-export function prepareCreateLine(outputCircle, workflowObj, srcNode) {
+export function prepareCreateLine (outputCircle, workflowObj, srcNode) {
     let circleParam = srcNode.props.config.outputCircle.normal;
 
     let lineX1 = outputCircle.position[0] + outputCircle.parent.position[0] * 1;
     let lineY1 = outputCircle.position[1] + circleParam.shape.r + outputCircle.parent.position[1] * 1;
 
-    return function createLine(zr, tempLine, mousemoveEvent) {
+    return function createLine (zr, tempLine, mousemoveEvent) {
         let vector0 = zrender.vector.create(lineX1, lineY1);
         let vector1 = zrender.vector.create(mousemoveEvent.offsetX, mousemoveEvent.offsetY);
         if (zrender.vector.distance(vector1, vector0) > 10) {
@@ -274,7 +275,7 @@ export function prepareCreateLine(outputCircle, workflowObj, srcNode) {
  * @param {Object} workflowInstance AWorkflow实例
  * @return {string} 目标元素类型
  */
-export function getElementType(zrElement, workflowInstance) {
+export function getElementType (zrElement, workflowInstance) {
     let workflowObj = workflowInstance.workflowObj;
     let type = '';
     let isNode = workflowObj.nodes.some((edge, index) => {
@@ -304,7 +305,7 @@ export function getElementType(zrElement, workflowInstance) {
  * @param {Object} workflowInstance AWorkflow实例
  * @return {Object} 元素数据
  */
-export function getDataByZrDom(zrElement, type, workflowInstance) {
+export function getDataByZrDom (zrElement, type, workflowInstance) {
     let groupId = zrElement.parent.id;
     let workflowObj = workflowInstance.workflowObj;
     if (type === 'node') {
@@ -330,7 +331,7 @@ export function getDataByZrDom(zrElement, type, workflowInstance) {
  * @param {Object} workflowInstance AWorkflow实例
  * @return {Object} 元素数据
  */
-export function getNodeByCircle(zrCircle, workflowInstance) {
+export function getNodeByCircle (zrCircle, workflowInstance) {
     let zrNodes = workflowInstance.workflowObj.nodes;
     let node = zrNodes.find((node, index) => {
         return node.dom.group.id === zrCircle.parent.id;
