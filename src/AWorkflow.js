@@ -68,35 +68,35 @@ export default class AWorkflow {
     }
 
     // 注册模版
-    static registerTemplate(...args) {
+    static registerTemplate (...args) {
         comPlate.registerTemplate.call(comPlate, ...args);
     }
 
-    setWorkflowObj(draw) {
+    setWorkflowObj (draw) {
         this.workflowObj = {
             nodes: draw.nodes,
             edges: draw.edges
         };
     }
-    getNodesIns() {
+    getNodesIns () {
         return this.workflowObj.nodes;
     }
-    getNodeInsById(id) {
+    getNodeInsById (id) {
         return this.workflowObj.nodes.find(node => node.props.id === id);
     }
-    getEdgesIns() {
+    getEdgesIns () {
         return this.workflowObj.edges;
     }
-    getEdgeInsById(src, to) {
+    getEdgeInsById (src, to) {
         return this.workflowObj.edges.find(edge => src === edge.props.src && to === edge.props.to);
     }
 
-    getMaxCoord() {
+    getMaxCoord () {
         return this.maxCoord;
     }
 
-    render() {
-        const {nodes, edges} = this.data;
+    render () {
+        const { nodes, edges } = this.data;
         // 编译
         let templateData = comPlate.compileTemplate(nodes, edges, this.optionsManager.options);
         if (this.optionsManager.options.autoSort) {
@@ -129,7 +129,7 @@ export default class AWorkflow {
      * @param {string} templateName 模版名称
      * @return {Object} compileObj 编译后的对象
      */
-    getTemplate(templateName) {
+    getTemplate (templateName) {
         return comPlate.getTemplate.call(comPlate, templateName);
     }
 
@@ -140,7 +140,7 @@ export default class AWorkflow {
      * @param {Object} templateUpdateObj 模版对象
      * @return {undefined}
      */
-    updateTemplate(templateName, templateUpdateObj) {
+    updateTemplate (templateName, templateUpdateObj) {
         comPlate.updateTemplate.call(comPlate, templateName, templateUpdateObj);
     }
 
@@ -151,7 +151,7 @@ export default class AWorkflow {
      * @param {string} node.id 节点id
      * @param {boolean=} preventCusEvent 是否阻止触发添加节点event(addNode), false触发，true不触发
      */
-    addNode(node, preventCusEvent) {
+    addNode (node, preventCusEvent) {
         if (this.findNodeIndex(node.id) > -1) {
             throw new Error(`Node with id(${node.id}) is exist`);
         }
@@ -167,7 +167,7 @@ export default class AWorkflow {
             this.workflowObj.nodes.push(n);
             // add node to this.data
             this.data.nodes.push(node);
-            preventCusEvent || this.triggerCustomEvent('addNode', {target: n});
+            preventCusEvent || this.triggerCustomEvent('addNode', { target: n });
         }
     }
 
@@ -178,7 +178,7 @@ export default class AWorkflow {
      * @param {string} node.id 节点id
      * @param {boolean=} preventCusEvent 是否阻止触发删除节点event(removeNode), false触发，true不触发
      */
-    removeNode(node, preventCusEvent) {
+    removeNode (node, preventCusEvent) {
         // find node and delete NodeView instance
         const findNodeIndex = this.findNodeIndex(node.id);
         let nodeToDelete;
@@ -193,7 +193,7 @@ export default class AWorkflow {
         // delete edges related to the node
         this.updateEdgeByNode(node.id);
 
-        preventCusEvent || this.triggerCustomEvent('removeNode', {target: nodeToDelete});
+        preventCusEvent || this.triggerCustomEvent('removeNode', { target: nodeToDelete });
     }
 
     /**
@@ -204,7 +204,7 @@ export default class AWorkflow {
      * @param {string} edge.to 输出点
      * @param {boolean=} preventCusEvent 是否阻止触发添加连线event(addEdge), false触发，true不触发
      */
-    addEdge(edge, preventCusEvent) {
+    addEdge (edge, preventCusEvent) {
         const options = this.optionsManager.options;
         const templateData = comPlate.compileTemplate([], [edge], options);
         const e = templateData.edges[0];
@@ -220,13 +220,13 @@ export default class AWorkflow {
         };
 
         let EdgeClass = Edge.getClazzByName('basicEdge');
-        const eIns = new EdgeClass({props});
+        const eIns = new EdgeClass({ props });
         this.drawGroup.add(eIns.render(this.optionsManager.options));
         this.workflowObj.edges.push(eIns);
         // add edge to this.data
         this.data.edges.push(edge);
         // no need to trigger addEdge event when node is dragging to move which make edge re-create.
-        preventCusEvent || this.triggerCustomEvent('addEdge', {target: eIns});
+        preventCusEvent || this.triggerCustomEvent('addEdge', { target: eIns });
     }
 
     /**
@@ -237,7 +237,7 @@ export default class AWorkflow {
      * @param {string} edge.to 输出点
      * @param {boolean=} preventCusEvent 是否阻止触发删除连线event(removeEdge), false触发，true不触发
      */
-    removeEdge(edge, preventCusEvent) {
+    removeEdge (edge, preventCusEvent) {
         // find edge
         const findedgeIndex = this.workflowObj.edges.findIndex(e =>
             e.props.src === edge.src && e.props.to === edge.to);
@@ -249,7 +249,7 @@ export default class AWorkflow {
         }
         // delete from this.data
         this.data.edges = this.data.edges.filter(e => e.src === edge.src && e.to === edge.to);
-        preventCusEvent || this.triggerCustomEvent('removeEdge', {target: edgeToDelete});
+        preventCusEvent || this.triggerCustomEvent('removeEdge', { target: edgeToDelete });
     }
 
     /**
@@ -257,7 +257,7 @@ export default class AWorkflow {
      *
      * @param {zrender.Displayable} el aworkflow中保存的zrender图形实例
      */
-    removeEl(el) {
+    removeEl (el) {
         this.drawGroup.remove(el);
     }
 
@@ -267,7 +267,7 @@ export default class AWorkflow {
      * @param {Array<number>} scale 缩放比例[scalex, scaley]
      * @param {Array<number>} center 缩放参考原点[x, y]
      */
-    setScale(scale, center) {
+    setScale (scale, center) {
         if (this._zr && this.drawGroup) {
             this.drawGroup.attr({
                 scale: [scale, scale],
@@ -283,7 +283,7 @@ export default class AWorkflow {
      * @param {string} id 节点id
      * @return {number} 查找到的节目下标，没有查到则为-1
      */
-    findNodeIndex(id) {
+    findNodeIndex (id) {
         return this.workflowObj.nodes.findIndex(n => n.props.id === id);
     }
 
@@ -294,7 +294,7 @@ export default class AWorkflow {
      * @param {string} to 连线终点信息
      * @return {number} 查找到的连线对象下标，没有查到则为-1
      */
-    findEdgeIndex(src, to) {
+    findEdgeIndex (src, to) {
         return this.workflowObj.edges.findIndex(e => e.props.src === src && e.props.to === to);
     }
 
@@ -305,7 +305,7 @@ export default class AWorkflow {
      * @param {string|Object} selector 如果是string，则是节点的子形状；如果是Object，则直接对节点更新
      * @param {Object=} attributes 如果selector是string，则为待更新的属性,属性参考对应形状的zrender实例
      */
-    updateNode(id, selector, attributes) {
+    updateNode (id, selector, attributes) {
         const index = this.findNodeIndex(id);
         if (index === -1) {
             throw new Error(`There is no node with id ${id}`);
@@ -359,7 +359,7 @@ export default class AWorkflow {
      * @param {string} selector 节点的子形状
      * @param {Object} attributes 待更新的属性,属性参考对应形状的zrender实例,暂不支持根据本地Shape的props更新
      */
-    updateEdge(edge, selector, attributes) {
+    updateEdge (edge, selector, attributes) {
         if (!edge || !edge.src || !edge.to || !zrUtil.isString(selector) || !zrUtil.isObject(attributes)) {
             throw new Error('invalid params when invoking updateEdge()');
         }
@@ -408,7 +408,7 @@ export default class AWorkflow {
      *
      * @param {string} nodeId 更新过的节点id
      */
-    updateEdgeByNode(nodeId) {
+    updateEdgeByNode (nodeId) {
         const edges = this.workflowObj.edges.filter(e =>
             e.props.src.split(':')[0] === nodeId || e.props.to.split(':')[0] === nodeId);
         edges.forEach(e => {
@@ -430,7 +430,7 @@ export default class AWorkflow {
      *
      * @param {Array<Menu>} edgeMenus 菜单配置
      */
-    edgeMenus(edgeMenus) {
+    edgeMenus (edgeMenus) {
         this.menuManager.buildEdgeMenus(edgeMenus);
     }
 
@@ -439,7 +439,7 @@ export default class AWorkflow {
      *
      * @param {Array<Menu>} nodeMenus 菜单配置
      */
-    nodeMenus(nodeMenus) {
+    nodeMenus (nodeMenus) {
         this.menuManager.buildNodeMenus(nodeMenus);
     }
 
@@ -449,7 +449,7 @@ export default class AWorkflow {
      * @param {string} type 自定义事件类型
      * @param {Object} e 事件对象
      */
-    triggerCustomEvent(type, e) {
+    triggerCustomEvent (type, e) {
         if (!e.target) {
             return;
         }
@@ -468,9 +468,56 @@ export default class AWorkflow {
             console.warn(`No such custom event "${type}" in lib`);
             return;
         }
-
+        let times = 0;
+        this.workflowObj.nodes.forEach(function (item, index) {
+            let id = item.props.id;
+            if (item.children.box.dom.id === e.target.id) {
+                eventPack.push({ "type": "node", id })
+                times++;
+            }
+            if (item.children.icon && item.children.icon.dom.id === e.target.id) {
+                eventPack.push({ "type": "node", id })
+                times++;
+            }
+            item.children.inputCircles.forEach(function (inputCirclesItem, inputCirclesIndex) {
+                if (inputCirclesItem.dom.id === e.target.id) {
+                    eventPack.push({ "type": "node", id })
+                    times++;
+                }
+            })
+            item.children.outputCircles.forEach(function (outputCirclesItem, outputCirclesIndex) {
+                if (outputCirclesItem.dom.id === e.target.id) {
+                    eventPack.push({ "type": "node", id })
+                    times++;
+                }
+            })
+            if (item.children.text.dom.id === e.target.id) {
+                eventPack.push({ "type": "node", id })
+                times++;
+            }
+        });
+        this.workflowObj.edges.forEach(function (item, index) {
+            let src = item.props.src;
+            let to = item.props.to;
+            if (item.children.backline.dom.id === e.target.id) {
+                eventPack.push({ "type": "edge", src, to })
+                times++;
+            }
+            if (item.children.line.dom.id === e.target.id) {
+                eventPack.push({ "type": "edge", src, to })
+                times++;
+            }
+            if (item.children.triangle.dom.id === e.target.id) {
+                eventPack.push({ "type": "edge", src, to })
+                times++;
+            }
+        });
+        if (times > 1) {
+            console.error("疑似ID重复" + times)
+            console.error(eventPack)
+        }
         this.isSilent(type)
-        && this.trigger.apply(this, [type, ...eventPack]);
+            && this.trigger.apply(this, [type, ...eventPack]);
     }
 }
 

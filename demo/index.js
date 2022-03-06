@@ -106,13 +106,26 @@ let globalConfig = {
     // 自动排序时，true: 水平排序，false: 垂直排序
     horizontal: false
 };
-let workflow = new AWrokflow(document.getElementById('aw'), {nodes, edges}, globalConfig);
+let workflow = new AWrokflow(document.getElementById('aw'), { nodes, edges }, globalConfig);
 workflow.on('mousedown', function (name, data, event) {
     console.log('custom mousedown triggered!');
     workflow.off('mousedown');
 });
-workflow.on('click', function (name, data, event) {
-    console.log('custom click triggered!');
+workflow.on('click', function (name, data, eInfo) {
+    // 如果点击到了有效元素
+    if (eInfo) {
+        // 点击到了节点
+        if (eInfo.type === "node") {
+            // 节点id
+            console.log(eInfo.id)
+        }
+        // 点击到了连线
+        if (eInfo.type === "edge") {
+            // 连线唯一判定
+            console.log(eInfo.src, eInfo.to)
+        }
+    }
+    // 取消点击监听
     workflow.off('click');
 });
 workflow.on('addNode', function (node) {
@@ -215,7 +228,7 @@ document.getElementById('t').addEventListener('click', function () {
 });
 
 document.getElementById('tt').addEventListener('click', function () {
-    workflow.updateEdge({src: '123:0', to: '124:0'}, 'triangle', {
+    workflow.updateEdge({ src: '123:0', to: '124:0' }, 'triangle', {
         shape: {
             width: 300,
             height: 100
